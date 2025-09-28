@@ -85,5 +85,5 @@ COPY --from=build /usr/bin/pgbouncer /usr/bin/
 RUN mkdir -p /etc/pgbouncer /var/log/pgbouncer /var/run/pgbouncer && chown -R postgres /var/run/pgbouncer /etc/pgbouncer /var/log/pgbouncer
 
 USER postgres
-EXPOSE 5432
+EXPOSE 6432
 CMD ["/usr/bin/pgbouncer", "/etc/pgbouncer/pgbouncer.ini"]
