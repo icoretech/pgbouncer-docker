@@ -5,7 +5,7 @@
 
 ## 📖 Overview
 
-The build system automates the process of pulling the latest code from the main branch of the PgBouncer project, packaging it into a Docker image, and publishing the image.
+The build system tracks official PgBouncer releases and builds images from upstream git tags (for example, `pgbouncer_1_24_1`). When a new release tag is available, a multi‑arch image is built and published to GHCR. Image tags mirror the PgBouncer version (for example, `1.24.1`). Supported architectures: `linux/amd64`, `linux/arm64`.
 
 ⚡️ We now have a [Helm chart available for deploying PgBouncer](https://github.com/icoretech/helm).
 
@@ -17,11 +17,11 @@ To pull a Docker image, use the following command:
 docker pull ghcr.io/icoretech/pgbouncer-docker:<tag>
 ```
 
-Replace `<tag>` with the specific version you wish to pull.
+Replace `<tag>` with a PgBouncer release version (for example, `1.24.1`).
 
 You can find the available tags on the [GitHub Packages page](https://github.com/icoretech/pgbouncer-docker/pkgs/container/pgbouncer-docker) for this repository.
 
-Upon start the image will look for `/etc/pgbouncer/pgbouncer.ini`.
+Upon start the image reads its config at `/etc/pgbouncer/pgbouncer.ini`. The default listening port is `6432` (configure via `pgbouncer.ini`).
 
 ## 📄 License
 
