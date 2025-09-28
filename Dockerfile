@@ -1,9 +1,9 @@
-# docker build -t pgbouncer-docker:1.24.0 --build-arg REPO_TAG=1.24.0 .
-# docker run pgbouncer-docker:1.24.0
+# docker build -t pgbouncer-docker:1.24.1 --build-arg REPO_TAG=1.24.1 .
+# docker run pgbouncer-docker:1.24.1
 # This image is made to work with the related Helm chart. It lacks config files on purpose.
 
 # Build stage
-FROM alpine:3.21 AS build
+FROM alpine:3.22 AS build
 ARG REPO_TAG
 
 # Install build dependencies
@@ -41,7 +41,7 @@ RUN make
 RUN make install
 
 # Runtime stage
-FROM alpine:3.21
+FROM alpine:3.22
 
 # Install runtime dependencies
 RUN apk add -U --no-cache busybox libevent postgresql-client
