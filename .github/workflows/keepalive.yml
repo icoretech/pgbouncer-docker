@@ -1,0 +1,43 @@
+name: Keep Repository Active
+
+on:
+  # Run weekly to ensure we never hit GitHub's 60‑day inactivity window.
+  schedule:
+    - cron: "23 5 * * 1" # Mondays at 05:23 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create keepalive commit if idle
+        shell: bash
+        run: |
+          set -euo pipefail
+          now=$(date +%s)
+          last=$(git log -1 --format=%ct || echo 0)
+          days=$(( ( now - last ) / 86400 ))
+          threshold_days=${THRESHOLD_DAYS:-50}
+
+          echo "Last commit: ${days} days ago; threshold: ${threshold_days} days"
+
+          if (( days > threshold_days )); then
+            echo "Creating keepalive commit to maintain repository activity..."
+            mkdir -p .github
+            date -u +%Y-%m-%dT%H:%M:%SZ > .github/.keepalive
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/.keepalive
+            git commit -m "chore(keepalive): repository activity"
+            git push
+          else
+            echo "No keepalive commit needed."
+          fi
