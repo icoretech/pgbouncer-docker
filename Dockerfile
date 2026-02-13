@@ -34,7 +34,7 @@
 # Note: This image is built for the related Helm chart and ships without config on purpose.
 
 # Build stage
-FROM alpine:3.22 AS build
+FROM alpine:3.23.3 AS build
 # renovate: datasource=github-tags depName=pgbouncer/pgbouncer
 ARG REPO_TAG=pgbouncer_1_25_1
 
@@ -73,7 +73,7 @@ RUN make
 RUN make install
 
 # Runtime stage
-FROM alpine:3.22
+FROM alpine:3.23.3
 
 # Install runtime dependencies
 RUN apk add -U --no-cache busybox libevent postgresql-client
@@ -83,7 +83,9 @@ COPY --from=build /usr/bin/pgbouncer /usr/bin/
 # COPY --from=build /tmp/pgbouncer/etc/pgbouncer.ini /etc/pgbouncer/pgbouncer.ini
 
 # Setup directories
-RUN mkdir -p /etc/pgbouncer /var/log/pgbouncer /var/run/pgbouncer && chown -R postgres /var/run/pgbouncer /etc/pgbouncer /var/log/pgbouncer
+RUN /usr/bin/pgbouncer -V \
+    && mkdir -p /etc/pgbouncer /var/log/pgbouncer /var/run/pgbouncer \
+    && chown -R postgres /var/run/pgbouncer /etc/pgbouncer /var/log/pgbouncer
 
 USER postgres
 EXPOSE 6432
