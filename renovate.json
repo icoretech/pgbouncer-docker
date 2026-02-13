@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "enabledManagers": ["custom.regex"],
+  "dependencyDashboard": true,
+  "labels": ["dependencies"],
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 10,
+  "rebaseWhen": "conflicted",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/(^|/)Dockerfile$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+ARG REPO_TAG=(?<currentValue>\\S+)"
+      ],
+      "versioningTemplate": "regex:^pgbouncer_(?<major>\\d+)_(?<minor>\\d+)_(?<patch>\\d+)(?:-(?<prerelease>[0-9A-Za-z.-]+))?$"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Automerge PgBouncer tag updates only",
+      "matchManagers": ["custom.regex"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "automergeType": "pr"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # Local build and run
 #
 # Build (choose PgBouncer version via REPO_TAG):
-#   docker build -t pgbouncer-docker:local --build-arg REPO_TAG=1.24.1 .
+#   docker build -t pgbouncer-docker:local --build-arg REPO_TAG=pgbouncer_1_24_1 .
 #
 # Minimal pgbouncer.ini (save as ./pgbouncer.ini):
 #   [databases]
@@ -35,7 +35,8 @@
 
 # Build stage
 FROM alpine:3.22 AS build
-ARG REPO_TAG
+# renovate: datasource=github-tags depName=pgbouncer/pgbouncer
+ARG REPO_TAG=pgbouncer_1_25_1
 
 # Install build dependencies
 RUN apk add -U --no-cache \
@@ -59,7 +60,7 @@ RUN git clone https://github.com/pgbouncer/pgbouncer.git /tmp/pgbouncer
 
 # Checkout the desired version
 WORKDIR /tmp/pgbouncer
-RUN git checkout "pgbouncer_${REPO_TAG//./_}"
+RUN git checkout "$REPO_TAG"
 
 # Initialize and update submodules
 RUN git submodule init

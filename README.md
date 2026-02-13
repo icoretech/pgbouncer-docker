@@ -5,7 +5,11 @@
 
 ## 📖 Overview
 
-The build system tracks official PgBouncer releases and builds images from upstream git tags (for example, `pgbouncer_1_24_1`). When a new release tag is available, a multi‑arch image is built and published to GHCR. Image tags mirror the PgBouncer version (for example, `1.24.1`). Supported architectures: `linux/amd64`, `linux/arm64`.
+The build system uses an upstream PgBouncer git tag pin in `Dockerfile` (`ARG REPO_TAG`, for example `pgbouncer_1_25_1`) and builds multi‑arch images (`linux/amd64`, `linux/arm64`) to GHCR. Version bumps are managed via Renovate pull requests, and an image is published only after that PR is merged (by a maintainer or branch protection policy).
+
+Published tags behavior:
+- When `REPO_TAG` changes, the workflow publishes the version tag (for example `1.25.1`) and a commit-specific immutable tag (`1.25.1-<sha>`).
+- When only base/build dependencies change (for example Alpine), the workflow publishes only the commit-specific immutable tag, so an existing version tag is not overwritten.
 
 ⚡️ We now have a [Helm chart available for deploying PgBouncer](https://github.com/icoretech/helm).
 
