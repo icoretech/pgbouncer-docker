@@ -106,6 +106,8 @@ jobs:
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: index
         with:
           images: ghcr.io/icoretech/pgbouncer-docker
           labels: |
@@ -114,9 +116,9 @@ jobs:
             io.artifacthub.package.license=MIT
             io.artifacthub.package.maintainers=[{"name":"Claudio Poli","email":"claudio@icorete.ch"}]
             io.artifacthub.package.readme-url=https://github.com/icoretech/pgbouncer-docker/blob/main/README.md
-            org.opencontainers.image.description=PgBouncer
+            org.opencontainers.image.description=Multi-arch PgBouncer Docker image built from official upstream releases
             org.opencontainers.image.source=https://github.com/icoretech/pgbouncer-docker
-            org.opencontainers.image.title=pgbouncer
+            org.opencontainers.image.title=pgbouncer-docker
             org.opencontainers.image.vendor=iCoreTech, Inc.
           tags: |
             type=raw,value=${{ env.VERSION }},enable=${{ steps.publish_strategy.outputs.publish_version_tag == 'true' }}
@@ -136,4 +138,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           provenance: mode=max

@@ -78,6 +78,9 @@ FROM alpine:3.23.3
 # Install runtime dependencies
 RUN apk add -U --no-cache busybox libevent postgresql-client
 
+LABEL org.opencontainers.image.source="https://github.com/icoretech/pgbouncer-docker" \
+      org.opencontainers.image.description="Multi-arch PgBouncer Docker image built from official upstream releases"
+
 # Copy necessary files from build stage
 COPY --from=build /usr/bin/pgbouncer /usr/bin/
 # COPY --from=build /tmp/pgbouncer/etc/pgbouncer.ini /etc/pgbouncer/pgbouncer.ini
