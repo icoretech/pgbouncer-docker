@@ -34,7 +34,7 @@
 # Note: This image is built for the related Helm chart and ships without config on purpose.
 
 # Build stage
-FROM alpine:3.23.3 AS build
+FROM alpine:3.23.4 AS build
 # renovate: datasource=github-tags depName=pgbouncer/pgbouncer
 ARG REPO_TAG=pgbouncer_1_25_2
 
@@ -73,7 +73,7 @@ RUN make
 RUN make install
 
 # Runtime stage
-FROM alpine:3.23.3
+FROM alpine:3.23.4
 
 # Install runtime dependencies
 RUN apk add -U --no-cache busybox libevent postgresql-client
