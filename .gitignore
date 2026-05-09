@@ -1,4 +1,5 @@
 /pgbouncer
+.sisyphus/
 .DS_Store
 push.sh
 scripts/
