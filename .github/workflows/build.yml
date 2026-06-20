@@ -77,26 +77,6 @@ jobs:
           echo "repo_tag=$REPO_TAG" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Decide publish tags strategy
-        id: publish_strategy
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "publish_version_tag=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          if ! git rev-parse --verify HEAD^ >/dev/null 2>&1; then
-            echo "publish_version_tag=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          OLD_REPO_TAG=$(git show HEAD^:Dockerfile 2>/dev/null | awk -F= '/^ARG REPO_TAG=/{print $2; exit}')
-          if [ -z "$OLD_REPO_TAG" ] || [ "$OLD_REPO_TAG" != "${REPO_TAG}" ]; then
-            echo "publish_version_tag=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "publish_version_tag=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -121,8 +101,7 @@ jobs:
             org.opencontainers.image.title=pgbouncer-docker
             org.opencontainers.image.vendor=iCoreTech, Inc.
           tags: |
-            type=raw,value=${{ env.VERSION }},enable=${{ steps.publish_strategy.outputs.publish_version_tag == 'true' }}
-            type=sha,prefix=${{ env.VERSION }}-,format=short,enable=true
+            type=raw,value=${{ env.VERSION }},enable=true
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
