@@ -36,7 +36,7 @@
 # Build stage
 FROM alpine:3.24.2 AS build
 # renovate: datasource=github-tags depName=pgbouncer/pgbouncer
-ARG REPO_TAG=pgbouncer_1_25_2
+ARG REPO_TAG=pgbouncer_1_26_0
 
 # Install build dependencies
 RUN apk add -U --no-cache \
